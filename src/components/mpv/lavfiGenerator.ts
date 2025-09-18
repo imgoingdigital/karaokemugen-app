@@ -109,13 +109,32 @@ export class lavfiGenerator {
 
 		const scaleAvailable = this.isScaleAvailable();
 		const qrCodeFile = resolve(resolvedPath('Temp'), 'qrcode.png').replaceAll('\\', '/');
+
+		// Read configurable QR code position. Semantics:
+		// - PosX and PosY are percentages. Defaults are 5 and 5 (matching previous behavior).
+		// - Horizontal (PosX):
+		//   * If >= 0: margin from RIGHT edge => x = W - w - (W * PosX/100)
+		//   * If < 0:  margin from LEFT edge  => x = (W * abs(PosX)/100)
+		// - Vertical (PosY):
+		//   * If >= 0: margin from TOP edge   => y = H * PosY/100
+		//   * If < 0:  margin from BOTTOM edge=> y = H - h - (H * abs(PosY)/100)
+		const conf = getConfig();
+		const posX = conf?.Player?.Display?.QRCodePosition?.PosX ?? 5;
+		const posY = conf?.Player?.Display?.QRCodePosition?.PosY ?? 5;
+		const xExpr = (typeof posX === 'number' && posX < 0)
+			? `(W*${Math.abs(posX)}/100)`
+			: `W-w-(W*${Math.max(0, Number(posX) || 0)}/100)`;
+		const yExpr = (typeof posY === 'number' && posY < 0)
+			? `H-h-(H*${Math.abs(posY)}/100)`
+			: `H*${Math.max(0, Number(posY) || 0)}/100`;
+
 		return [
 			`movie=\\'${qrCodeFile}\\'[qrcode]`,
 			scaleAvailable ? `${split}` : '',
 			scaleAvailable
 				? `[qrcode][v_in${videoInput}]scale=w=(rh*.256):h=(rh*.256)[qrcode1]`
 				: `[qrcode][vid${playerState.currentVideoTrack}]scale2ref=w=(ih*.256):h=(ih*.256)[qrcode1][base]`,
-			`${overlay}[qrcode1]overlay=x=W-w-(W*0.05):y=H*0.05`,
+			`${overlay}[qrcode1]overlay=x=${xExpr}:y=${yExpr}`,
 		]
 			.filter(x => !!x)
 			.join(';');

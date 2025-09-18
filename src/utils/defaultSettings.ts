@@ -175,6 +175,13 @@ export const defaults: Config = {
 				QRCode: false,
 				QRCodeDuringSong: false,
 			},
+			QRCodePosition: {
+				// Horizontal and Vertical margins in percent.
+				// PosX: >=0 => margin from RIGHT edge; <0 => margin from LEFT edge
+				// PosY: >=0 => margin from TOP edge; <0 => margin from BOTTOM edge
+				PosX: 5,
+				PosY: 5,
+			},
 			RandomQuotes: true,
 			SongInfo: true,
 		},
@@ -335,6 +342,8 @@ export const configConstraints = {
 	'Player.Display.ConnectionInfo.Enabled': { inclusion: bools },
 	'Player.Display.ConnectionInfo.QRCode': { inclusion: bools },
 	'Player.Display.ConnectionInfo.Message': { presence: { allowEmpty: true } },
+	'Player.Display.QRCodePosition.PosX': { numericality: { onlyInteger: true } },
+	'Player.Display.QRCodePosition.PosY': { numericality: { onlyInteger: true } },
 	'Player.FullScreen': { inclusion: bools },
 	'Player.Monitor': { inclusion: bools },
 	'Player.StayOnTop': { inclusion: bools },

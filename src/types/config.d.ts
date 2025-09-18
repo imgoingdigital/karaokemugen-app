@@ -188,6 +188,10 @@ export interface Config {
 				QRCode?: boolean;
 				QRCodeDuringSong?: boolean;
 			};
+			QRCodePosition?: {
+				PosX?: number; // percentage; >=0 from right, <0 from left
+				PosY?: number; // percentage; >=0 from top, <0 from bottom
+			};
 			RandomQuotes?: boolean;
 			SongInfo?: boolean;
 			SongInfoLanguage?: string;
