@@ -177,6 +177,12 @@ Player:
       # Display QRCode ? First option is for pause screens.
       QRCode: false
       QRCodeDuringSong: false
+    # QR code position on screen (percent margins). Defaults match top-right with 5% margins.
+    # PosX: >= 0 => margin from RIGHT edge; < 0 => margin from LEFT edge
+    # PosY: >= 0 => margin from TOP edge;  < 0 => margin from BOTTOM edge
+    QRCodePosition:
+      PosX: 5
+      PosY: 5
   # Override mpv's video output driver
   mpvVideoOutput: null
   # Fullscreen ?
